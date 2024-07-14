@@ -1,6 +1,14 @@
 # AI Fact Checker
 
-This project is an AI-powered fact-checking web application that can analyze statements and images using Claude Sonnet 3.5 via OpenRouter.
+This project is an AI-powered fact-checking web application that can analyze statements and images using Claude Sonnet 3.5 via OpenRouter, combined with web search results.
+
+## Features
+
+- Fact-check statements using AI, web search, or a combination of both
+- Analyze images in conjunction with statements
+- Support for multiple languages (currently English and German)
+- User preferences for language and fact-checking method
+- Timeline view of past fact-checks (coming soon)
 
 ## Prerequisites
 
@@ -35,9 +43,12 @@ This project is an AI-powered fact-checking web application that can analyze sta
    pip install -r requirements.txt
    ```
 
-5. Create a `.env` file in the project root directory and add your OpenRouter API key:
+5. Create a `.env` file in the project root directory and add your API keys:
    ```
-   OPENROUTER_API_KEY=your_api_key_here
+   OPENROUTER_API_KEY=your_openrouter_api_key_here
+   GOOGLE_API_KEY=your_google_api_key_here
+   GOOGLE_CSE_ID=your_google_cse_id_here
+   DATABASE_URL=sqlite:///fact_checks.db
    ```
 
 ## Running the Application
@@ -55,9 +66,24 @@ This project is an AI-powered fact-checking web application that can analyze sta
 
 1. Enter a statement in the text area.
 2. Optionally, upload an image related to the statement.
-3. Click the "Check Facts" button to submit your request.
-4. The AI will analyze the statement (and image, if provided) and display the results.
+3. Select the desired language and fact-checking method.
+4. Click the "Check Facts" button to submit your request.
+5. The application will analyze the statement (and image, if provided) and display the results.
+
+## Fact-Checking Methods
+
+- AI Only: Uses Claude Sonnet 3.5 to analyze the statement based on its knowledge.
+- Web Search Only: Uses Google Custom Search to find relevant information and analyzes it.
+- AI + Web Search: Combines AI analysis with web search results for a comprehensive fact-check.
+
+## User Preferences
+
+You can set your preferred language and fact-checking method, which will be saved for future sessions.
+
+## Timeline Feature (Coming Soon)
+
+A timeline view of past fact-checks will be added in a future update, allowing users to review their previous queries and results.
 
 ## Note
 
-This application uses the Claude Sonnet 3.5 model via OpenRouter. Make sure you have a valid API key and sufficient credits to use the service.
+This application uses the Claude Sonnet 3.5 model via OpenRouter and Google Custom Search API. Make sure you have valid API keys and sufficient credits to use these services.
