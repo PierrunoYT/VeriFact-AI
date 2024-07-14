@@ -18,6 +18,7 @@ def index():
         statement = request.form.get('statement', '')
         image = request.files.get('image')
         language = request.form.get('language', 'english')
+        method = request.form.get('method', 'combined')
         
         def generate():
             result = ""
@@ -25,13 +26,13 @@ def index():
                 filename = secure_filename(image.filename)
                 image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 image.save(image_path)
-                result_generator = analyze_image_and_fact(statement, image_path, language)
+                result_generator = analyze_image_and_fact(statement, image_path, language, method)
                 for chunk in result_generator:
                     result += chunk
                     yield f"data: {json.dumps({'content': chunk})}\n\n"
                 os.remove(image_path)  # Clean up the uploaded file
             else:
-                result_generator = fact_check(statement, language)
+                result_generator = fact_check(statement, language, method)
                 for chunk in result_generator:
                     result += chunk
                     yield f"data: {json.dumps({'content': chunk})}\n\n"

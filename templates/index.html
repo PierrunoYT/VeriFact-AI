@@ -12,7 +12,6 @@
         <nav>
             <ul>
                 <li><a href="#fact-check">Fact Check</a></li>
-                <li><a href="#timeline">Timeline</a></li>
             </ul>
         </nav>
         <div id="fact-check">
@@ -32,6 +31,14 @@
                         <option value="german">German</option>
                     </select>
                 </div>
+                <div>
+                    <label for="method">Select fact-checking method:</label>
+                    <select id="method" name="method">
+                        <option value="combined">AI + Web Search</option>
+                        <option value="ai">AI Only</option>
+                        <option value="search">Web Search Only</option>
+                    </select>
+                </div>
                 <button type="submit">Check Facts</button>
             </form>
             <div id="result" style="display: none;">
@@ -39,20 +46,7 @@
                 <p id="result-content"></p>
             </div>
         </div>
-        <div id="timeline">
-            <h2>Fact Check Timeline</h2>
-            <div>
-                <label for="start-date">Start Date:</label>
-                <input type="date" id="start-date">
-                <label for="end-date">End Date:</label>
-                <input type="date" id="end-date">
-                <button id="filter-timeline">Filter</button>
-            </div>
-            <div id="timeline-container"></div>
-        </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
     <script>
         document.getElementById('fact-check-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -155,21 +149,7 @@
             timeline = new vis.Timeline(timelineContainer, items, options);
         }
 
-        filterButton.addEventListener('click', async () => {
-            try {
-                const data = await fetchTimelineData(startDateInput.value, endDateInput.value);
-                if (timeline) {
-                    timeline.destroy();
-                }
-                createTimeline(data);
-            } catch (error) {
-                console.error('Error fetching timeline data:', error);
-                timelineContainer.textContent = 'An error occurred while fetching the timeline data. Please try again.';
-            }
-        });
-
-        // Initial timeline load
-        fetchTimelineData().then(createTimeline).catch(console.error);
+        // No replacement needed, just remove this section
     </script>
 </body>
 </html>
