@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from googleapiclient.discovery import build
 from sentence_transformers import SentenceTransformer, util
 import torch
+from bs4 import BeautifulSoup
 
 # Load environment variables
 load_dotenv()
@@ -70,10 +71,25 @@ def search_google(query, num_results=10):
     results = service.cse().list(q=query, cx=GOOGLE_CSE_ID, num=num_results).execute()
     return results.get('items', [])
 
+def fetch_webpage_content(url):
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        return ' '.join(p.get_text() for p in soup.find_all('p'))
+    except Exception as e:
+        print(f"Error fetching {url}: {str(e)}")
+        return ""
+
 def semantic_search(query, search_results, top_k=5):
     query_embedding = model.encode(query, convert_to_tensor=True)
     
-    corpus = [result['snippet'] for result in search_results if 'snippet' in result]
+    corpus = []
+    for result in search_results:
+        snippet = result.get('snippet', '')
+        content = fetch_webpage_content(result.get('link', ''))
+        corpus.append(f"{snippet} {content}")
+    
     corpus_embeddings = model.encode(corpus, convert_to_tensor=True)
     
     cos_scores = util.cos_sim(query_embedding, corpus_embeddings)[0]
