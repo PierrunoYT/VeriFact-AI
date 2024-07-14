@@ -4,24 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Fact Checker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold mb-4 text-center">AI Fact Checker</h1>
-        <form id="fact-check-form" class="space-y-4">
+<body>
+    <div class="container">
+        <h1>AI Fact Checker</h1>
+        <form id="fact-check-form">
             <div>
-                <label for="statement" class="block text-sm font-medium text-gray-700">Enter a statement to fact-check:</label>
-                <textarea id="statement" name="statement" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required></textarea>
+                <label for="statement">Enter a statement to fact-check:</label>
+                <textarea id="statement" name="statement" rows="3" required></textarea>
             </div>
             <div>
-                <label for="image" class="block text-sm font-medium text-gray-700">Upload an image (optional):</label>
-                <input type="file" id="image" name="image" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                <label for="image">Upload an image (optional):</label>
+                <input type="file" id="image" name="image" accept="image/*">
             </div>
-            <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Check Facts</button>
+            <button type="submit">Check Facts</button>
         </form>
-        <div id="result" class="mt-4 p-4 bg-gray-50 rounded-md hidden">
-            <h2 class="text-lg font-semibold mb-2">Analysis Result:</h2>
+        <div id="result" style="display: none;">
+            <h2>Analysis Result:</h2>
             <p id="result-content"></p>
         </div>
     </div>
@@ -37,7 +37,7 @@
             });
             
             const data = await response.json();
-            document.getElementById('result').classList.remove('hidden');
+            document.getElementById('result').style.display = 'block';
             document.getElementById('result-content').textContent = data.result;
         });
     </script>
