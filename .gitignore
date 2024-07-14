@@ -1,1 +1,4 @@
 .aider*
+# Environment variables
+.env
+.env.example
