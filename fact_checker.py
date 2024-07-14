@@ -28,7 +28,7 @@ def query_claude(prompt, image_path=None):
         ]
     
     data = {
-        "model": "anthropic/claude-3-sonnet-20240229",
+        "model": "anthropic/claude-3.5-sonnet",
         "messages": messages
     }
     
