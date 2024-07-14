@@ -6,3 +6,9 @@ google-api-python-client==2.86.0
 sentence-transformers==2.2.2
 torch==2.3.1
 beautifulsoup4==4.10.0
+flask
+requests
+beautifulsoup4
+openai
+google-api-python-client
+python-dotenv
