@@ -4,11 +4,8 @@ python-dotenv==0.19.1
 Werkzeug==2.0.2
 google-api-python-client==2.86.0
 sentence-transformers==2.2.2
-torch==2.3.1
+torch==2.0.1
+torchvision==0.15.2
+torchaudio==2.0.2
 beautifulsoup4==4.10.0
-flask
-requests
-beautifulsoup4
-openai
-google-api-python-client
-python-dotenv
+openai==0.27.0
