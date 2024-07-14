@@ -3,3 +3,5 @@ requests==2.26.0
 python-dotenv==0.19.1
 Werkzeug==2.0.2
 google-api-python-client==2.86.0
+sentence-transformers==2.2.2
+torch==1.13.1

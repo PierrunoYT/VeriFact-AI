@@ -4,6 +4,8 @@ import base64
 import json
 from dotenv import load_dotenv
 from googleapiclient.discovery import build
+from sentence_transformers import SentenceTransformer, util
+import torch
 
 # Load environment variables
 load_dotenv()
@@ -15,6 +17,9 @@ API_URL = "https://openrouter.ai/api/v1/chat/completions"
 # Google Custom Search API settings
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
+
+# Initialize the sentence transformer model
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 def query_claude(prompt, image_path=None, language='english'):
     headers = {
@@ -65,6 +70,25 @@ def search_google(query, num_results=10):
     results = service.cse().list(q=query, cx=GOOGLE_CSE_ID, num=num_results).execute()
     return results.get('items', [])
 
+def semantic_search(query, search_results, top_k=5):
+    query_embedding = model.encode(query, convert_to_tensor=True)
+    
+    corpus = [result['snippet'] for result in search_results if 'snippet' in result]
+    corpus_embeddings = model.encode(corpus, convert_to_tensor=True)
+    
+    cos_scores = util.cos_sim(query_embedding, corpus_embeddings)[0]
+    top_results = torch.topk(cos_scores, k=min(top_k, len(corpus)))
+    
+    return [
+        {
+            'score': score.item(),
+            'content': corpus[idx],
+            'title': search_results[idx].get('title', ''),
+            'link': search_results[idx].get('link', '')
+        }
+        for score, idx in zip(top_results.values, top_results.indices)
+    ]
+
 def fact_check(statement, language='english', method='combined'):
     if method == 'ai':
         return ai_fact_check(statement, language)
@@ -91,19 +115,21 @@ def ai_fact_check(statement, language='english'):
 
 def search_engine_fact_check(statement, language='english'):
     search_results = search_google(statement)
+    semantic_results = semantic_search(statement, search_results)
     
     prompt = f"""
-    Please fact-check the following statement using the provided search results:
+    Please fact-check the following statement using the provided semantically ranked search results:
     
     Statement: "{statement}"
     
-    Search Results:
-    {json.dumps(search_results, indent=2)}
+    Semantically Ranked Search Results:
+    {json.dumps(semantic_results, indent=2)}
     
     1. Is this statement true, false, or partially true based on the search results?
     2. What facts from the search results support or refute this statement?
     3. Are there any nuances or context from the search results that should be considered?
     4. Provide a summary of the most relevant information from the search results.
+    5. Explain how the semantic ranking of the results affects your analysis.
     
     Please structure your response clearly and concisely.
     """
@@ -112,20 +138,22 @@ def search_engine_fact_check(statement, language='english'):
 
 def combined_fact_check(statement, language='english'):
     search_results = search_google(statement)
+    semantic_results = semantic_search(statement, search_results)
     
     prompt = f"""
-    Please fact-check the following statement using your knowledge and the provided search results:
+    Please fact-check the following statement using your knowledge and the provided semantically ranked search results:
     
     Statement: "{statement}"
     
-    Search Results:
-    {json.dumps(search_results, indent=2)}
+    Semantically Ranked Search Results:
+    {json.dumps(semantic_results, indent=2)}
     
     1. Is this statement true, false, or partially true?
     2. What facts from your knowledge and the search results support or refute this statement?
     3. Are there any nuances or context that should be considered?
     4. Provide a comprehensive analysis combining your knowledge and the search results.
     5. List at least 5 reliable sources for the information, including those from the search results. For each source, provide the name of the source, its URL (if available), and a brief description of its relevance. If fewer than 5 sources are available, explain in detail why this is the case and discuss the implications for the reliability of the fact-check.
+    6. Explain how the semantic ranking of the results affects your analysis and the reliability of the sources.
     
     Please structure your response clearly and concisely.
     """
