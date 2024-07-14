@@ -3,6 +3,7 @@ import os
 import base64
 import json
 from dotenv import load_dotenv
+from googleapiclient.discovery import build
 
 # Load environment variables
 load_dotenv()
@@ -10,6 +11,10 @@ load_dotenv()
 # OpenRouter API settings
 API_KEY = os.getenv("OPENROUTER_API_KEY")
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
+
+# Google Custom Search API settings
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
 
 def query_claude(prompt, image_path=None, language='english'):
     headers = {
@@ -55,7 +60,20 @@ def query_claude(prompt, image_path=None, language='english'):
     else:
         yield f"Error: {response.status_code} - {response.text}"
 
-def fact_check(statement, language='english'):
+def search_google(query, num_results=5):
+    service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
+    results = service.cse().list(q=query, cx=GOOGLE_CSE_ID, num=num_results).execute()
+    return results.get('items', [])
+
+def fact_check(statement, language='english', method='combined'):
+    if method == 'ai':
+        return ai_fact_check(statement, language)
+    elif method == 'search':
+        return search_engine_fact_check(statement, language)
+    else:  # combined
+        return combined_fact_check(statement, language)
+
+def ai_fact_check(statement, language='english'):
     prompt = f"""
     Please fact-check the following statement and provide a detailed analysis:
     
@@ -71,7 +89,58 @@ def fact_check(statement, language='english'):
     
     return query_claude(prompt, language=language)
 
-def analyze_image_and_fact(statement, image_path, language='english'):
+def search_engine_fact_check(statement, language='english'):
+    search_results = search_google(statement)
+    
+    prompt = f"""
+    Please fact-check the following statement using the provided search results:
+    
+    Statement: "{statement}"
+    
+    Search Results:
+    {json.dumps(search_results, indent=2)}
+    
+    1. Is this statement true, false, or partially true based on the search results?
+    2. What facts from the search results support or refute this statement?
+    3. Are there any nuances or context from the search results that should be considered?
+    4. Provide a summary of the most relevant information from the search results.
+    
+    Please structure your response clearly and concisely.
+    """
+    
+    return query_claude(prompt, language=language)
+
+def combined_fact_check(statement, language='english'):
+    search_results = search_google(statement)
+    
+    prompt = f"""
+    Please fact-check the following statement using your knowledge and the provided search results:
+    
+    Statement: "{statement}"
+    
+    Search Results:
+    {json.dumps(search_results, indent=2)}
+    
+    1. Is this statement true, false, or partially true?
+    2. What facts from your knowledge and the search results support or refute this statement?
+    3. Are there any nuances or context that should be considered?
+    4. Provide a comprehensive analysis combining your knowledge and the search results.
+    5. List reliable sources for the information, including those from the search results.
+    
+    Please structure your response clearly and concisely.
+    """
+    
+    return query_claude(prompt, language=language)
+
+def analyze_image_and_fact(statement, image_path, language='english', method='combined'):
+    if method == 'ai':
+        return ai_analyze_image_and_fact(statement, image_path, language)
+    elif method == 'search':
+        return search_engine_analyze_image_and_fact(statement, image_path, language)
+    else:  # combined
+        return combined_analyze_image_and_fact(statement, image_path, language)
+
+def ai_analyze_image_and_fact(statement, image_path, language='english'):
     prompt = f"""
     Please analyze the provided image and fact-check the following statement:
     
@@ -82,6 +151,52 @@ def analyze_image_and_fact(statement, image_path, language='english'):
     3. What elements in the image support or refute the statement?
     4. Are there any nuances or context in the image that should be considered?
     5. If applicable, provide any additional information or context about the topic shown in the image.
+    
+    Please structure your response clearly and concisely.
+    """
+    
+    return query_claude(prompt, image_path, language=language)
+
+def search_engine_analyze_image_and_fact(statement, image_path, language='english'):
+    search_results = search_google(statement)
+    
+    prompt = f"""
+    Please analyze the provided image and fact-check the following statement using the search results:
+    
+    Statement: "{statement}"
+    
+    Search Results:
+    {json.dumps(search_results, indent=2)}
+    
+    1. Describe the contents of the image.
+    2. Is the statement true, false, or partially true based on the image and search results?
+    3. What elements in the image and search results support or refute the statement?
+    4. Are there any nuances or context in the image or search results that should be considered?
+    5. Provide a summary of the most relevant information from the image and search results.
+    
+    Please structure your response clearly and concisely.
+    """
+    
+    return query_claude(prompt, image_path, language=language)
+
+def combined_analyze_image_and_fact(statement, image_path, language='english'):
+    search_results = search_google(statement)
+    
+    prompt = f"""
+    Please analyze the provided image and fact-check the following statement using your knowledge and the search results:
+    
+    Statement: "{statement}"
+    
+    Search Results:
+    {json.dumps(search_results, indent=2)}
+    
+    1. Describe the contents of the image.
+    2. Is the statement true, false, or partially true based on the image, your knowledge, and search results?
+    3. What elements in the image, your knowledge, and search results support or refute the statement?
+    4. Are there any nuances or context that should be considered?
+    5. Provide a comprehensive analysis combining the image analysis, your knowledge, and the search results.
+    6. If applicable, provide any additional information or context about the topic shown in the image.
+    7. List reliable sources for the information, including those from the search results.
     
     Please structure your response clearly and concisely.
     """
