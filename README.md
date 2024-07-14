@@ -81,3 +81,53 @@ You can set your preferred language and fact-checking method, which will be save
 ## Note
 
 This application uses the Claude Sonnet 3.5 model via OpenRouter and Google Custom Search API. Make sure you have valid API keys and sufficient credits to use these services.
+# VeriFact AI
+
+## Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/PierrunoYT/VeriFact-AI.git
+   cd VeriFact-AI
+   ```
+
+2. Create a virtual environment:
+   ```
+   python -m venv venv
+   ```
+
+3. Activate the virtual environment:
+   - On Windows:
+     ```
+     venv\Scripts\activate
+     ```
+   - On macOS and Linux:
+     ```
+     source venv/bin/activate
+     ```
+
+4. Install the required packages:
+   ```
+   pip install -r requirements.txt
+   ```
+
+5. Copy the `.env.example` file to `.env` and fill in your API keys and other configuration details.
+
+## Usage
+
+1. Ensure your virtual environment is activated.
+
+2. Run the application:
+   ```
+   python app.py
+   ```
+
+3. Open a web browser and navigate to `http://localhost:5000` to use the FactCheck AI tool.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+[MIT License](LICENSE)
