@@ -115,14 +115,20 @@ def fact_check(statement, language='english', method='combined'):
 
 def ai_fact_check(statement, language='english'):
     prompt = f"""
-    Please fact-check the following statement and provide a detailed analysis:
+    Please fact-check the following statement and provide a detailed analysis, including an assessment of whether it might be fake news:
     
     Statement: "{statement}"
     
     1. Is this statement true, false, or partially true?
     2. What are the facts that support or refute this statement?
     3. Are there any nuances or context that should be considered?
-    4. Provide at least 5 reliable sources for the information you've used in your analysis. For each source, provide the name of the source, its URL (if available), and a brief description of its relevance. If fewer than 5 sources are available, explain in detail why this is the case and discuss the implications for the reliability of your analysis.
+    4. Assess the likelihood that this statement is fake news. Consider factors such as:
+       - Emotional language or sensationalism
+       - Lack of verifiable sources
+       - Inconsistencies with well-established facts
+       - Potential motivations for spreading misinformation
+    5. Provide at least 5 reliable sources for the information you've used in your analysis. For each source, provide the name of the source, its URL (if available), and a brief description of its relevance. If fewer than 5 sources are available, explain in detail why this is the case and discuss the implications for the reliability of your analysis.
+    6. If you suspect this might be fake news, suggest ways for readers to verify the information independently.
     
     Please structure your response clearly and concisely.
     """
@@ -134,7 +140,7 @@ def search_engine_fact_check(statement, language='english'):
     semantic_results = semantic_search(statement, search_results)
     
     prompt = f"""
-    Please fact-check the following statement using the provided semantically ranked search results:
+    Please fact-check the following statement using the provided semantically ranked search results, and assess whether it might be fake news:
     
     Statement: "{statement}"
     
@@ -146,6 +152,12 @@ def search_engine_fact_check(statement, language='english'):
     3. Are there any nuances or context from the search results that should be considered?
     4. Provide a summary of the most relevant information from the search results.
     5. Explain how the semantic ranking of the results affects your analysis.
+    6. Assess the likelihood that this statement is fake news based on the search results. Consider factors such as:
+       - Consistency of information across multiple sources
+       - Credibility of the sources
+       - Presence of fact-checking articles or debunking information
+       - Potential motivations for spreading misinformation
+    7. If you suspect this might be fake news, suggest ways for readers to verify the information independently using the search results.
     
     Please structure your response clearly and concisely.
     """
@@ -157,7 +169,7 @@ def combined_fact_check(statement, language='english'):
     semantic_results = semantic_search(statement, search_results)
     
     prompt = f"""
-    Please fact-check the following statement using your knowledge and the provided semantically ranked search results:
+    Please fact-check the following statement using your knowledge and the provided semantically ranked search results, and assess whether it might be fake news:
     
     Statement: "{statement}"
     
@@ -170,6 +182,14 @@ def combined_fact_check(statement, language='english'):
     4. Provide a comprehensive analysis combining your knowledge and the search results.
     5. List at least 5 reliable sources for the information, including those from the search results. For each source, provide the name of the source, its URL (if available), and a brief description of its relevance. If fewer than 5 sources are available, explain in detail why this is the case and discuss the implications for the reliability of the fact-check.
     6. Explain how the semantic ranking of the results affects your analysis and the reliability of the sources.
+    7. Assess the likelihood that this statement is fake news. Consider factors such as:
+       - Emotional language or sensationalism
+       - Lack of verifiable sources
+       - Inconsistencies with well-established facts
+       - Potential motivations for spreading misinformation
+       - Consistency of information across multiple sources
+       - Presence of fact-checking articles or debunking information
+    8. If you suspect this might be fake news, suggest ways for readers to verify the information independently.
     
     Please structure your response clearly and concisely.
     """

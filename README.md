@@ -5,6 +5,7 @@ This project is an AI-powered fact-checking web application that can analyze sta
 ## Features
 
 - Fact-check statements using AI, web search, or a combination of both
+- Detect potential fake news and provide guidance on verification
 - Analyze images in conjunction with statements
 - Support for multiple languages (currently English and German)
 - User preferences for language and fact-checking method
