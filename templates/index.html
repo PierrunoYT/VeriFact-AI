@@ -31,6 +31,12 @@
             <h2>Analysis Result:</h2>
             <p id="result-content"></p>
         </div>
+        <div id="search-section">
+            <h2>Search Previous Fact Checks</h2>
+            <input type="text" id="search-input" placeholder="Enter search query">
+            <button id="search-button">Search</button>
+            <div id="search-results"></div>
+        </div>
     </div>
     <script>
         document.getElementById('fact-check-form').addEventListener('submit', async (e) => {
@@ -91,6 +97,42 @@
             } catch (error) {
                 console.error('Error:', error);
                 resultContentElement.textContent = 'An error occurred while processing your request. Please try again.';
+            }
+        });
+
+        document.getElementById('search-button').addEventListener('click', async () => {
+            const query = document.getElementById('search-input').value;
+            const searchResultsElement = document.getElementById('search-results');
+            
+            searchResultsElement.textContent = 'Searching...';
+            
+            try {
+                const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const results = await response.json();
+                
+                searchResultsElement.innerHTML = '';
+                results.forEach(result => {
+                    const resultElement = document.createElement('div');
+                    resultElement.classList.add('search-result');
+                    resultElement.innerHTML = `
+                        <h3>${result._source.statement}</h3>
+                        <p>${result._source.result}</p>
+                        <small>Date: ${new Date(result._source.timestamp).toLocaleString()}</small>
+                    `;
+                    searchResultsElement.appendChild(resultElement);
+                });
+                
+                if (results.length === 0) {
+                    searchResultsElement.textContent = 'No results found.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                searchResultsElement.textContent = 'An error occurred while searching. Please try again.';
             }
         });
     </script>
