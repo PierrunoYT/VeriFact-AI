@@ -48,22 +48,23 @@
         </div>
     </div>
     <script>
-        document.getElementById('fact-check-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            
-            const resultElement = document.getElementById('result');
-            const resultContentElement = document.getElementById('result-content');
-            
-            resultElement.style.display = 'block';
-            resultContentElement.textContent = 'Loading...';
-            
-            try {
-                const response = await fetch('/', {
-                    method: 'POST',
-                    body: formData
-                });
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('fact-check-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const form = e.target;
+                const formData = new FormData(form);
+                
+                const resultElement = document.getElementById('result');
+                const resultContentElement = document.getElementById('result-content');
+                
+                resultElement.style.display = 'block';
+                resultContentElement.textContent = 'Loading...';
+                
+                try {
+                    const response = await fetch('/', {
+                        method: 'POST',
+                        body: formData
+                    });
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -107,56 +108,57 @@
                 console.error('Error:', error);
                 resultContentElement.textContent = 'An error occurred while processing your request. Please try again.';
             }
-        });
+            });
 
 
-        // Load user preferences
-        async function loadUserPreferences() {
-            try {
-                const response = await fetch('/user-preferences');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+            // Load user preferences
+            async function loadUserPreferences() {
+                try {
+                    const response = await fetch('/user-preferences');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const preferences = await response.json();
+                    document.getElementById('language').value = preferences.language;
+                    document.getElementById('method').value = preferences.method;
+                    document.getElementById('pref-language').value = preferences.language;
+                    document.getElementById('pref-method').value = preferences.method;
+                } catch (error) {
+                    console.error('Error loading user preferences:', error);
                 }
-                const preferences = await response.json();
-                document.getElementById('language').value = preferences.language;
-                document.getElementById('method').value = preferences.method;
-                document.getElementById('pref-language').value = preferences.language;
-                document.getElementById('pref-method').value = preferences.method;
-            } catch (error) {
-                console.error('Error loading user preferences:', error);
             }
-        }
 
-        // Save user preferences
-        document.getElementById('preferences-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const preferences = Object.fromEntries(formData);
-            
-            try {
-                const response = await fetch('/user-preferences', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(preferences),
-                });
+            // Save user preferences
+            document.getElementById('preferences-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const form = e.target;
+                const formData = new FormData(form);
+                const preferences = Object.fromEntries(formData);
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                try {
+                    const response = await fetch('/user-preferences', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(preferences),
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    alert('Preferences saved successfully!');
+                    loadUserPreferences();
+                } catch (error) {
+                    console.error('Error saving user preferences:', error);
+                    alert('Failed to save preferences. Please try again.');
                 }
-                
-                alert('Preferences saved successfully!');
-                loadUserPreferences();
-            } catch (error) {
-                console.error('Error saving user preferences:', error);
-                alert('Failed to save preferences. Please try again.');
-            }
-        });
+            });
 
-        // Load user preferences when the page loads
-        window.addEventListener('load', loadUserPreferences);
+            // Load user preferences when the page loads
+            loadUserPreferences();
+        });
     </script>
 </body>
 </html>
