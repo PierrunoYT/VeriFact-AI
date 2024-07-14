@@ -32,13 +32,13 @@ def index():
                     filename = secure_filename(image.filename)
                     image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                     image.save(image_path)
-                    result_generator = analyze_image_and_fact(statement, image_path, language, method)
+                    result_generator = analyze_image_and_fact(statement, image_path, language=language, method=method)
                     for chunk in result_generator:
                         result += chunk
                         yield f"data: {json.dumps({'content': chunk})}\n\n"
                     os.remove(image_path)  # Clean up the uploaded file
                 else:
-                    result_generator = fact_check(statement, language, method)
+                    result_generator = fact_check(statement, language=language, method=method)
                     for chunk in result_generator:
                         result += chunk
                         yield f"data: {json.dumps({'content': chunk})}\n\n"
