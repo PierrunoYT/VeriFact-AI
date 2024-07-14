@@ -25,12 +25,6 @@ FactCheck AI is a web-based application that combines the power of AI and tradit
 
 In an era of information overload and misinformation, having a reliable fact-checking tool is crucial. FactCheck AI empowers you to make informed decisions by providing accurate and comprehensive fact-checking results.
 
-## 🔗 Try It Out!
-
-[Insert link to your deployed application here]
-
-We're constantly working on improving FactCheck AI and would love to hear your feedback. Feel free to try it out and let us know what you think!
-
 ## 🤝 Contributing
 
 FactCheck AI is an open-source project, and we welcome contributions. If you're interested in improving the tool or adding new features, check out our GitHub repository: https://github.com/PierrunoYT/VeriFact-AI
