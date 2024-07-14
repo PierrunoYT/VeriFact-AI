@@ -38,7 +38,16 @@ def query_claude(prompt, image_path=None):
     if response.status_code == 200:
         for line in response.iter_lines():
             if line:
-                yield line.decode('utf-8')
+                line = line.decode('utf-8')
+                if line.startswith('data: '):
+                    try:
+                        json_data = json.loads(line[6:])
+                        if 'choices' in json_data and json_data['choices']:
+                            content = json_data['choices'][0].get('delta', {}).get('content', '')
+                            if content:
+                                yield content
+                    except json.JSONDecodeError:
+                        yield line[6:]  # Fallback: return the raw data without the 'data: ' prefix
     else:
         yield f"Error: {response.status_code} - {response.text}"
 
