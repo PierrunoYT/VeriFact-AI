@@ -3,7 +3,6 @@ from fact_checker import fact_check, analyze_image_and_fact
 import os
 from werkzeug.utils import secure_filename
 import json
-from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -12,13 +11,19 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max-limit
 # Ensure the upload folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+# In-memory storage for user preferences
+user_preferences = {
+    'language': 'english',
+    'method': 'combined'
+}
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         statement = request.form.get('statement', '')
         image = request.files.get('image')
-        language = request.form.get('language', 'english')
-        method = request.form.get('method', 'combined')
+        language = request.form.get('language', user_preferences['language'])
+        method = request.form.get('method', user_preferences['method'])
         
         def generate():
             result = ""
@@ -40,6 +45,17 @@ def index():
         return Response(stream_with_context(generate()), content_type='text/event-stream')
     
     return render_template('index.html')
+
+@app.route('/user-preferences', methods=['GET', 'POST'])
+def user_preferences_route():
+    global user_preferences
+    if request.method == 'POST':
+        data = request.json
+        user_preferences['language'] = data.get('language', user_preferences['language'])
+        user_preferences['method'] = data.get('method', user_preferences['method'])
+        return jsonify({"message": "Preferences updated successfully"}), 200
+    else:
+        return jsonify(user_preferences), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

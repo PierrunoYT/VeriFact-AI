@@ -8,8 +8,6 @@ This project is an AI-powered fact-checking web application that can analyze sta
 - Analyze images in conjunction with statements
 - Support for multiple languages (currently English and German)
 - User preferences for language and fact-checking method
-- Timeline view of past fact-checks (coming soon)
-
 ## Prerequisites
 
 - Python 3.7 or higher
@@ -48,7 +46,6 @@ This project is an AI-powered fact-checking web application that can analyze sta
    OPENROUTER_API_KEY=your_openrouter_api_key_here
    GOOGLE_API_KEY=your_google_api_key_here
    GOOGLE_CSE_ID=your_google_cse_id_here
-   DATABASE_URL=sqlite:///fact_checks.db
    ```
 
 ## Running the Application
@@ -78,11 +75,7 @@ This project is an AI-powered fact-checking web application that can analyze sta
 
 ## User Preferences
 
-You can set your preferred language and fact-checking method, which will be saved for future sessions.
-
-## Timeline Feature (Coming Soon)
-
-A timeline view of past fact-checks will be added in a future update, allowing users to review their previous queries and results.
+You can set your preferred language and fact-checking method, which will be saved for the current session.
 
 ## Note
 

@@ -109,45 +109,6 @@
             }
         });
 
-        // Timeline functionality
-        const timelineContainer = document.getElementById('timeline-container');
-        const startDateInput = document.getElementById('start-date');
-        const endDateInput = document.getElementById('end-date');
-        const filterButton = document.getElementById('filter-timeline');
-
-        let timeline;
-
-        async function fetchTimelineData(startDate, endDate) {
-            const url = new URL('/timeline', window.location.origin);
-            if (startDate) url.searchParams.append('start_date', startDate);
-            if (endDate) url.searchParams.append('end_date', endDate);
-
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return await response.json();
-        }
-
-        function createTimeline(data) {
-            const items = new vis.DataSet(data.map(item => ({
-                id: item.id,
-                content: `
-                    <strong>${item.content}</strong><br>
-                    Result: ${item.result}<br>
-                    Analysis: ${item.analysis}
-                `,
-                start: item.start
-            })));
-
-            const options = {
-                height: '400px',
-                start: new Date(data[0].start),
-                end: new Date(data[data.length - 1].start)
-            };
-
-            timeline = new vis.Timeline(timelineContainer, items, options);
-        }
 
         // Load user preferences
         async function loadUserPreferences() {
