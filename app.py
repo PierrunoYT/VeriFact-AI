@@ -24,12 +24,12 @@ def index():
                 image.save(image_path)
                 result_generator = analyze_image_and_fact(statement, image_path)
                 for chunk in result_generator:
-                    yield f"data: {json.dumps({'result': chunk})}\n\n"
+                    yield f"data: {json.dumps({'content': chunk})}\n\n"
                 os.remove(image_path)  # Clean up the uploaded file
             else:
                 result_generator = fact_check(statement)
                 for chunk in result_generator:
-                    yield f"data: {json.dumps({'result': chunk})}\n\n"
+                    yield f"data: {json.dumps({'content': chunk})}\n\n"
         
         return Response(stream_with_context(generate()), content_type='text/event-stream')
     
