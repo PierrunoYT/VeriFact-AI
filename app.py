@@ -16,18 +16,19 @@ def index():
     if request.method == 'POST':
         statement = request.form.get('statement', '')
         image = request.files.get('image')
+        language = request.form.get('language', 'english')
         
         def generate():
             if image:
                 filename = secure_filename(image.filename)
                 image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 image.save(image_path)
-                result_generator = analyze_image_and_fact(statement, image_path)
+                result_generator = analyze_image_and_fact(statement, image_path, language)
                 for chunk in result_generator:
                     yield f"data: {json.dumps({'content': chunk})}\n\n"
                 os.remove(image_path)  # Clean up the uploaded file
             else:
-                result_generator = fact_check(statement)
+                result_generator = fact_check(statement, language)
                 for chunk in result_generator:
                     yield f"data: {json.dumps({'content': chunk})}\n\n"
         

@@ -11,11 +11,14 @@ load_dotenv()
 API_KEY = os.getenv("OPENROUTER_API_KEY")
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
-def query_claude(prompt, image_path=None):
+def query_claude(prompt, image_path=None, language='english'):
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json"
     }
+    
+    if language == 'german':
+        prompt = f"Please respond in German. {prompt}"
     
     messages = [{"role": "user", "content": prompt}]
     
@@ -52,7 +55,7 @@ def query_claude(prompt, image_path=None):
     else:
         yield f"Error: {response.status_code} - {response.text}"
 
-def fact_check(statement):
+def fact_check(statement, language='english'):
     prompt = f"""
     Please fact-check the following statement and provide a detailed analysis:
     
@@ -66,9 +69,9 @@ def fact_check(statement):
     Please structure your response clearly and concisely.
     """
     
-    return query_claude(prompt)
+    return query_claude(prompt, language=language)
 
-def analyze_image_and_fact(statement, image_path):
+def analyze_image_and_fact(statement, image_path, language='english'):
     prompt = f"""
     Please analyze the provided image and fact-check the following statement:
     
@@ -83,4 +86,4 @@ def analyze_image_and_fact(statement, image_path):
     Please structure your response clearly and concisely.
     """
     
-    return query_claude(prompt, image_path)
+    return query_claude(prompt, image_path, language=language)
