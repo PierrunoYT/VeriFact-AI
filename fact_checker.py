@@ -82,7 +82,7 @@ def ai_fact_check(statement, language='english'):
     1. Is this statement true, false, or partially true?
     2. What are the facts that support or refute this statement?
     3. Are there any nuances or context that should be considered?
-    4. Provide reliable sources for the information you've used in your analysis.
+    4. Provide at least 5 reliable sources for the information you've used in your analysis. If fewer than 5 sources are available, explain why.
     
     Please structure your response clearly and concisely.
     """
@@ -125,7 +125,7 @@ def combined_fact_check(statement, language='english'):
     2. What facts from your knowledge and the search results support or refute this statement?
     3. Are there any nuances or context that should be considered?
     4. Provide a comprehensive analysis combining your knowledge and the search results.
-    5. List reliable sources for the information, including those from the search results.
+    5. List at least 5 reliable sources for the information, including those from the search results. If fewer than 5 sources are available, explain why.
     
     Please structure your response clearly and concisely.
     """
