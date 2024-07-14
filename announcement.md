@@ -1,34 +1,32 @@
-# Introducing FactCheck AI: Your Ultimate Truth Verification Tool
+# Introducing VeriFact AI: A New Tool for Information Verification
 
-Hey Reddit! 👋 I'm excited to announce the launch of **FactCheck AI**, a powerful and user-friendly fact-checking tool designed to help you verify information quickly and accurately.
+Hello Reddit community! I'm excited to share a project I've been working on called VeriFact AI. It's a web-based tool designed to help verify information using a combination of AI and search engine results.
 
-## 🔍 What is FactCheck AI?
+## What is VeriFact AI?
 
-FactCheck AI is a web-based application that combines the power of AI and traditional search engines to provide comprehensive fact-checking results. Whether you're a journalist, researcher, student, or just someone who values accurate information, FactCheck AI is here to help!
+VeriFact AI is an application that aims to assist users in fact-checking statements and analyzing images. It's designed for anyone who wants to verify information, from students and researchers to curious individuals.
 
-## 🚀 Key Features:
+## Key Features:
 
-* **Multiple Fact-Checking Methods**: Choose between AI-based, search engine-based, or a combined approach for thorough verification.
-* **Image Analysis**: Upload images along with statements for context-aware fact-checking.
-* **Multi-Language Support**: Verify information in multiple languages.
-* **User-Friendly Interface**: Easy to use, with results presented in a clear and understandable format.
-* **Customizable**: Set your preferred language and fact-checking method.
+* Multiple verification methods (AI, search engine, or combined)
+* Image analysis capability
+* Support for multiple languages
+* User-friendly interface
+* Customizable settings
 
-## 💡 How It Works:
+## How It Works:
 
-1. Enter the statement you want to fact-check.
-2. Optionally upload an image for context.
-3. Choose your preferred language and fact-checking method.
-4. Get detailed results, including verification status, explanation, and sources.
+1. Input a statement to verify
+2. Optionally upload an image for context
+3. Select your preferred language and verification method
+4. Receive a detailed analysis
 
-## 🌐 Why FactCheck AI?
+## Why VeriFact AI?
 
-In an era of information overload and misinformation, having a reliable fact-checking tool is crucial. FactCheck AI empowers you to make informed decisions by providing accurate and comprehensive fact-checking results.
+In today's information-rich world, it can be challenging to distinguish fact from fiction. VeriFact AI aims to provide a tool to help users make more informed decisions about the information they encounter.
 
-## 🤝 Contributing
+## Open Source Project
 
-FactCheck AI is an open-source project, and we welcome contributions. If you're interested in improving the tool or adding new features, check out our GitHub repository: [https://github.com/PierrunoYT/VeriFact-AI](https://github.com/PierrunoYT/VeriFact-AI)
+VeriFact AI is open-source, and we welcome contributions. If you're interested in improving the tool or adding new features, please check out our GitHub repository: [https://github.com/PierrunoYT/VeriFact-AI](https://github.com/PierrunoYT/VeriFact-AI)
 
-Let's work together to make the internet a more truthful place! 🌟
-
-^(#FactCheckAI #TruthMatters #FightMisinformation)
+We're excited to see how this tool can evolve with community input!
