@@ -60,7 +60,7 @@ def query_claude(prompt, image_path=None, language='english'):
     else:
         yield f"Error: {response.status_code} - {response.text}"
 
-def search_google(query, num_results=5):
+def search_google(query, num_results=10):
     service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
     results = service.cse().list(q=query, cx=GOOGLE_CSE_ID, num=num_results).execute()
     return results.get('items', [])
