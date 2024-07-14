@@ -33,7 +33,7 @@ We're constantly working on improving FactCheck AI and would love to hear your f
 
 ## 🤝 Contributing
 
-FactCheck AI is an open-source project, and we welcome contributions. If you're interested in improving the tool or adding new features, check out our GitHub repository: [Insert link to your GitHub repo]
+FactCheck AI is an open-source project, and we welcome contributions. If you're interested in improving the tool or adding new features, check out our GitHub repository: https://github.com/PierrunoYT/VeriFact-AI
 
 Let's work together to make the internet a more truthful place! 🌟
 
