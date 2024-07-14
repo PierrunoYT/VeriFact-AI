@@ -27,21 +27,21 @@ def index():
         
         def generate():
             try:
-            result = ""
-            if image:
-                filename = secure_filename(image.filename)
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                image.save(image_path)
-                result_generator = analyze_image_and_fact(statement, image_path, language, method)
-                for chunk in result_generator:
-                    result += chunk
-                    yield f"data: {json.dumps({'content': chunk})}\n\n"
-                os.remove(image_path)  # Clean up the uploaded file
-            else:
-                result_generator = fact_check(statement, language, method)
-                for chunk in result_generator:
-                    result += chunk
-                    yield f"data: {json.dumps({'content': chunk})}\n\n"
+                result = ""
+                if image:
+                    filename = secure_filename(image.filename)
+                    image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    image.save(image_path)
+                    result_generator = analyze_image_and_fact(statement, image_path, language, method)
+                    for chunk in result_generator:
+                        result += chunk
+                        yield f"data: {json.dumps({'content': chunk})}\n\n"
+                    os.remove(image_path)  # Clean up the uploaded file
+                else:
+                    result_generator = fact_check(statement, language, method)
+                    for chunk in result_generator:
+                        result += chunk
+                        yield f"data: {json.dumps({'content': chunk})}\n\n"
             except Exception as e:
                 app.logger.error(f"Error during fact checking: {str(e)}")
                 yield f"data: {json.dumps({'content': 'An error occurred during processing. Please try again.'})}\n\n"
