@@ -1,6 +1,6 @@
-# AI Fact Checker
+# VeriFact AI
 
-This project is an AI-powered fact-checking web application that can analyze statements and images using Claude Sonnet 3.5 via OpenRouter, combined with web search results.
+VeriFact AI is an advanced AI-powered fact-checking web application that analyzes statements and images using Claude Sonnet 3.5 via OpenRouter, combined with web search results.
 
 ## Features
 
