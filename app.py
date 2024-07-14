@@ -26,6 +26,7 @@ def index():
         method = request.form.get('method', user_preferences['method'])
         
         def generate():
+            try:
             result = ""
             if image:
                 filename = secure_filename(image.filename)
@@ -41,6 +42,9 @@ def index():
                 for chunk in result_generator:
                     result += chunk
                     yield f"data: {json.dumps({'content': chunk})}\n\n"
+            except Exception as e:
+                app.logger.error(f"Error during fact checking: {str(e)}")
+                yield f"data: {json.dumps({'content': 'An error occurred during processing. Please try again.'})}\n\n"
         
         return Response(stream_with_context(generate()), content_type='text/event-stream')
     
@@ -58,4 +62,4 @@ def user_preferences_route():
         return jsonify(user_preferences), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, threaded=True, timeout=300)
