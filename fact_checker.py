@@ -29,15 +29,18 @@ def query_claude(prompt, image_path=None):
     
     data = {
         "model": "anthropic/claude-3.5-sonnet",
-        "messages": messages
+        "messages": messages,
+        "stream": True
     }
     
-    response = requests.post(API_URL, json=data, headers=headers)
+    response = requests.post(API_URL, json=data, headers=headers, stream=True)
     
     if response.status_code == 200:
-        return response.json()['choices'][0]['message']['content']
+        for line in response.iter_lines():
+            if line:
+                yield line.decode('utf-8')
     else:
-        return f"Error: {response.status_code} - {response.text}"
+        yield f"Error: {response.status_code} - {response.text}"
 
 def fact_check(statement):
     prompt = f"""
@@ -71,5 +74,3 @@ def analyze_image_and_fact(statement, image_path):
     """
     
     return query_claude(prompt, image_path)
-
-# Remove the main() function as it's no longer needed for the web interface

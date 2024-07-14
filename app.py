@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, Response, stream_with_context
 from fact_checker import fact_check, analyze_image_and_fact
 import os
 from werkzeug.utils import secure_filename
+import json
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -16,16 +17,21 @@ def index():
         statement = request.form.get('statement', '')
         image = request.files.get('image')
         
-        if image:
-            filename = secure_filename(image.filename)
-            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            image.save(image_path)
-            result = analyze_image_and_fact(statement, image_path)
-            os.remove(image_path)  # Clean up the uploaded file
-        else:
-            result = fact_check(statement)
+        def generate():
+            if image:
+                filename = secure_filename(image.filename)
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image.save(image_path)
+                result_generator = analyze_image_and_fact(statement, image_path)
+                for chunk in result_generator:
+                    yield f"data: {json.dumps({'result': chunk})}\n\n"
+                os.remove(image_path)  # Clean up the uploaded file
+            else:
+                result_generator = fact_check(statement)
+                for chunk in result_generator:
+                    yield f"data: {json.dumps({'result': chunk})}\n\n"
         
-        return jsonify({'result': result})
+        return Response(stream_with_context(generate()), content_type='text/event-stream')
     
     return render_template('index.html')
 
